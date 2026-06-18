@@ -36,19 +36,19 @@ pipeline {
                 echo "✅ OWASP scan done"
             }
         }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh '''
-                        $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=netflix-clone \
-                        -Dsonar.projectKey=netflix-clone
-                    '''
-                }
-                echo "✅ SonarQube analysis done"
-            }
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonar-server') {
+            sh '''
+                $SCANNER_HOME/bin/sonar-scanner \
+                -Dsonar.projectName=netflix-clone \
+                -Dsonar.projectKey=netflix-clone \
+                -Dsonar.login=$SONAR_AUTH_TOKEN
+            '''
         }
+        echo "✅ SonarQube analysis done"
+    }
+}
 
         stage('Quality Gate') {
             steps {
