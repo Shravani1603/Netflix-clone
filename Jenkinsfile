@@ -60,24 +60,24 @@ stage('SonarQube Analysis') {
                 echo "✅ Docker image built"
             }
         }
-
-        stage('Trivy Image Scan') {
-            steps {
-                sh """
-                    trivy image \
-                    --format table \
-                    --severity HIGH,CRITICAL \
-                    --output trivy-report.txt \
-                    ${APP_NAME}:latest || true
-                """
-                echo "✅ Trivy scan done"
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'trivy-report.txt'
-                }
-            }
+stage('Trivy Image Scan') {
+    steps {
+        sh """
+            trivy image \
+            --format table \
+            --severity HIGH,CRITICAL \
+            --output trivy-report.txt \
+            netflix-clone:latest || true
+        """
+        echo "✅ Trivy scan done"
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'trivy-report.txt',
+            allowEmptyArchive: true
         }
+    }
+}
 
         stage('Push to DockerHub') {
             steps {
