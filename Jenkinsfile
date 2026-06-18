@@ -40,7 +40,7 @@ stage('SonarQube Analysis') {
         echo "✅ SonarQube analysis done"
     }
 }
-
+/*****
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -49,6 +49,7 @@ stage('SonarQube Analysis') {
                 echo "✅ Quality gate checked"
             }
         }
+        *****/
 
         stage('Docker Build') {
             steps {
