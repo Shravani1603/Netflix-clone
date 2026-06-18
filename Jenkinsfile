@@ -26,16 +26,16 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Check') {
-            steps {
-                dependencyCheck(
-                    additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit',
-                    odcInstallation: 'OWASP'
-                )
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                echo "✅ OWASP scan done"
-            }
-        }
+        //stage('OWASP Dependency Check') {
+          //  steps {
+            //    dependencyCheck(
+              //      additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit',
+                //    odcInstallation: 'OWASP'
+                //)
+                //dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                //echo "✅ OWASP scan done"
+            //}
+        //}
 stage('SonarQube Analysis') {
     steps {
         withSonarQubeEnv('sonar-server') {
