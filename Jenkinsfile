@@ -78,7 +78,6 @@ stage('Trivy Image Scan') {
         }
     }
 }
-
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(
