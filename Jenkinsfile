@@ -51,16 +51,14 @@ stage('SonarQube Analysis') {
         }
         *****/
 
-        stage('Docker Build') {
-            steps {
-                sh """
-                    docker build \
-                    -t ${APP_NAME}:latest \
-                    .
-                """
-                echo "✅ Docker image built"
-            }
-        }
+      stage('Docker Build') {
+    steps {
+        sh """
+            docker build \
+            --build-arg TMDB_V3_API_KEY=441a3ce6579b398ae3511bea29f28a4c \
+            -t ${APP_NAME}:latest \
+            .
+        """
 stage('Trivy Image Scan') {
     steps {
         sh """
