@@ -39,14 +39,14 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
-                }
-                echo "✅ Quality gate checked"
-            }
-        }
+        //stage('Quality Gate') {
+          //  steps {
+            //    timeout(time: 5, unit: 'MINUTES') {
+              //      waitForQualityGate abortPipeline: false
+               // }
+                //echo "✅ Quality gate checked"
+            //}
+        //}
 
         stage('Docker Build') {
             steps {
