@@ -4,7 +4,7 @@ pipeline {
         nodejs 'node16'
     }
     environment {
-        SCANNER_HOME = tool 'sonarscanner'
+        SCANNER_HOME = tool 'sonar-scanner'
         APP_NAME     = "netflix-clone"
         DOCKERHUB_USER = "shravani1608"
     }
@@ -26,21 +26,19 @@ pipeline {
             }
         }
 
-       
-stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('sonar-server') {
-            sh '''
-                $SCANNER_HOME/bin/sonar-scanner \
-                -Dsonar.projectName=netflix-clone \
-                -Dsonar.projectKey=netflix-clone \
-                -Dsonar.login=$SONAR_AUTH_TOKEN
-            '''
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=netflix-clone \
+                        -Dsonar.projectKey=netflix-clone
+                    '''
+                }
+                echo "✅ SonarQube analysis done"
+            }
         }
-        echo "✅ SonarQube analysis done"
-    }
-}
-/*****
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -49,34 +47,38 @@ stage('SonarQube Analysis') {
                 echo "✅ Quality gate checked"
             }
         }
-        *****/
 
-      stage('Docker Build') {
-    steps {
-        sh """
-            docker build \
-            --build-arg TMDB_V3_API_KEY=441a3ce6579b398ae3511bea29f28a4c \
-            -t ${APP_NAME}:latest \
-            .
-        """
-stage('Trivy Image Scan') {
-    steps {
-        sh """
-            trivy image \
-            --format table \
-            --severity HIGH,CRITICAL \
-            --output trivy-report.txt \
-            netflix-clone:latest || true
-        """
-        echo "✅ Trivy scan done"
-    }
-    post {
-        always {
-            archiveArtifacts artifacts: 'trivy-report.txt',
-            allowEmptyArchive: true
+        stage('Docker Build') {
+            steps {
+                sh """
+                    docker build \
+                    --build-arg TMDB_V3_API_KEY=441a3ce6579b398ae3511bea29f28a4c \
+                    -t ${APP_NAME}:latest \
+                    .
+                """
+                echo "✅ Docker image built"
+            }
         }
-    }
-}
+
+        stage('Trivy Image Scan') {
+            steps {
+                sh """
+                    trivy image \
+                    --format table \
+                    --severity HIGH,CRITICAL \
+                    --output trivy-report.txt \
+                    ${APP_NAME}:latest || true
+                """
+                echo "✅ Trivy scan done"
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-report.txt',
+                    allowEmptyArchive: true
+                }
+            }
+        }
+
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(
