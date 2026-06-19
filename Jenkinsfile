@@ -4,7 +4,7 @@ pipeline {
         nodejs 'node16'
     }
     environment {
-        SCANNER_HOME = tool 'sonar-scanner'
+        SCANNER_HOME = tool 'sonarscanner'
         APP_NAME     = "netflix-clone"
         DOCKERHUB_USER = "shravani1608"
     }
